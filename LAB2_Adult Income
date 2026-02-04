@@ -1,0 +1,29 @@
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+
+adult = pd.read_csv('/content/adult.csv')
+
+print("Dataset Info:")
+print(adult.info())
+
+adult.replace('?', pd.NA, inplace=True)
+
+print("\nMissing Values in Each Column:")
+print(adult.isnull().sum())
+
+adult_cleaned = adult.dropna()
+
+print("\nShape after removing missing values:")
+print(adult_cleaned.shape)
+
+categorical_cols = adult_cleaned.select_dtypes(include=['object']).columns
+print("\nCategorical Columns:")
+print(categorical_cols)
+
+le = LabelEncoder()
+adult_cleaned['income'] = le.fit_transform(adult_cleaned['income'])
+
+adult_encoded = pd.get_dummies(adult_cleaned, drop_first=True)
+
+print("\nEncoded Dataset (first 5 rows):")
+print(adult_encoded.head())
